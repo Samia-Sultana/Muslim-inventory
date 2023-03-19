@@ -68,63 +68,30 @@ class PurchaseController extends Controller
      }
     public function store(Request $request)
     {
-        $names = $request->input('name');
-        $skus = $request->input('token');
-        $weights = $request->input('weight');
-        $bangla_weights = $request->input('bangla_weight');
-        $carats = $request->input('carat');
-        $buying_prices = $request->input('buying_price');
-        $total_qtys = $request->input('total_qty');
-        $thumbnails = $request->file('thumbnail');
-        $buying_prices = $request->input('buying_price');
-       
+        $purchase = Purchase::create([
+            'product_id' => $request->product,
+            'supplier_id' => $request->supplier,
+            'buying_price' => $request->buyingPrice,
+            'selling_price' => $request->sellingPrice,
+            'purchase_date' => $request->purchaseDate,
+            'batch_no' => $request->batchNo,
+            'total_qty' => $request->totalQty,
+            'available_qty' => $request->totalQty,
+            'description' =>$request->description,
+        ]);
 
-        foreach($names as $key => $name) {
-            $product = new Product;
-            $product->name = $name;
-            $product->sku = $skus[$key];
-            $product->carat = $carats[$key];
-            $product->weight = $weights[$key];
-            $product->bangla_weight = $bangla_weights[$key];
-    
-            if ($thumbnails[$key]) {
-                $image = $thumbnails[$key];
-                
-                $compressedImage = $this->compressImage($image);
-                $product->thumbnail = $compressedImage;
-                
-            }
-            
-            $product->save();
+        $product = Product::find($request->product);
+        $purchase['barcode'] = $product->sku;
 
-            $purchase = Purchase::create([
-                'product_id' => $product['id'],
-                'supplier_id' => $request->supplier,
-                'buying_price' => $buying_prices[$key],
-               
-                'purchase_date' => $request->purchase_date,
-               
-                'batch_no' => $request->batch_no,
-                
-                'total_qty' => $total_qtys[$key],
-                'available_qty' => $total_qtys[$key],
-                'barcode' => $skus[$key] ,
-    
-    
-            ]);
-            $purchase->save();
-    
-        }
-
-        
-        
-        
+        $purchase->save();
 
         $notification = array(
             'message' => 'Purchase information added!',
             'alert-type' => 'success'
         );
         return redirect()->route('addPurchasePage')->with($notification);
+    
+        
     }
 
     /**

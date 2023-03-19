@@ -1,54 +1,25 @@
 <x-admin-layout>
 
 
-    <form enctype="multipart/form-data" method="POST" action="{{ route('addPurchase') }}">
+    <form enctype="multipart/form-data" method="POST" action="{{ route('addExpense') }}">
         @csrf
         <div class="page-wrapper">
             <div class="content">
                 <div class="page-header">
                     <div class="page-title">
-                        <h4>Purchase Add</h4>
-                        <h6>Add/Update Purchase</h6>
+                        <h4>Expense Add</h4>
+                        <h6>Add/Update Expense</h6>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body">
                     <div class="row">
-                            <div class="col-lg-3 col-sm-6 col-12">
+                          
+                            <div class="col-lg-4 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Product Name</label>
-                                    <select class="select" name="product" id="product">
-                                        @if($products)
-                                        @foreach($products as $product)
-                                        <option value="{{$product->id}}">{{$product->name}}-{{$product->sku}}</option>
-                                        @endforeach
-                                        @endif
-
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Supplier Name</label>
-                                    <div class="row">
-                                        <div class="col-lg-10 col-sm-10 col-10">
-                                            <select class="select" name="supplier" id="supplier">
-                                                @if($suppliers)
-                                                @foreach($suppliers as $supplier)
-                                                <option value="{{$supplier->id}}">{{$supplier->name}}</option>
-                                                @endforeach
-                                                @endif
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Purchase Date </label>
+                                    <label>Expense Date </label>
                                     <div class="input-groupicon ">
-                                        <input type="date" placeholder="DD-MM-YYYY" id="purchaseDate" name="purchaseDate">
+                                        <input type="date" placeholder="DD-MM-YYYY" id="expenseDate" name="expenseDate">
                                         <!--<div class="addonset">-->
                                         <!--    <img src="assets/img/icons/calendars.svg" alt="img">-->
                                         <!--</div>-->
@@ -56,37 +27,18 @@
                                 </div>
                             </div>
                            
-
-                            <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="col-lg-4 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Buying Price</label>
-                                    <input type="text" id="buyingPrice" name="buyingPrice">
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Selling Price</label>
-                                    <input type="text" id="sellingPrice" name="sellingPrice">
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Batch No</label>
-                                    <input type="text" id="batchNo" name="batchNo">
+                                    <label>Total Amount</label>
+                                    <input type="text" id="amount" name="amount">
                                 </div>
                             </div>
                             
-                            <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Total Quantity</label>
-                                    <input type="text" id="totalQty" name="totalQty">
-                                </div>
-                            </div>
 
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    
-                                    <textarea id="description" name="description" placeholder="Comments"></textarea>
+                                <label>Description</label>
+                                    <textarea id="description" name="description"></textarea>
                                 </div>
                             </div>
 

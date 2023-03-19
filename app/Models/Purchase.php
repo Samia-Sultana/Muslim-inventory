@@ -25,6 +25,7 @@ class Purchase extends Model
         'bangla_weight',
         'name',
         'sku',
-        'thumbnail'
+        'thumbnail',
+        'description'
     ];
 }

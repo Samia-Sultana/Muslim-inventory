@@ -3,6 +3,7 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PermissionController;
@@ -36,7 +37,15 @@ Route::middleware('auth', 'role:manager')->group(function(){
 });
 
 Route::middleware('auth','role:admin')->group(function () {
+    Route::get('/shop', function(){
+        return view('admin.selectShop');
+    })->name('shop');
+
     Route::get('/dashboard', function(){
+        return view('admin.dashboard');
+    })->name('dashboard');
+
+    Route::get('diamond/dashboard', function(){
         return view('admin.dashboard');
     })->name('dashboard');
 
@@ -55,6 +64,14 @@ Route::middleware('auth','role:admin')->group(function () {
     Route::post('/update/product',[ProductController::class,'update'])->name('updateProduct');
     Route::post('/delete/product',[ProductController::class,'destroy'])->name('deleteProduct');
     /* product CRUD end */
+
+     /* product CRUD for diamond */
+     Route::get('/diamond/product',[ProductController::class,'index'])->name('addProductPageDiamond');
+     Route::post('/diamond/add/product',[ProductController::class,'store'])->name('addProductDiamond');
+     Route::get('/diamond/product/list',[ProductController::class,'show'])->name('productListDiamond');
+     Route::post('/diamond/update/product',[ProductController::class,'update'])->name('updateProductDiamond');
+     Route::post('/diamond/delete/product',[ProductController::class,'destroy'])->name('deleteProductDiamond');
+     /* product CRUD end */
 
 
     /* purchase CRUD */
@@ -96,6 +113,16 @@ Route::middleware('auth','role:admin')->group(function () {
     Route::get('/inventory/report',[ReportController::class,'inventory'])->name('inventoryReport');
     Route::get('/range/report',[ReportController::class,'range'])->name('rangeReport');
     Route::post('/range/report/output',[ReportController::class,'rangeOutput'])->name('rangeSearchOutput');
+    Route::get('/expense',[ExpenseController::class,'index'])->name('addExpensePage');
+    Route::post('/add/expense',[ExpenseController::class,'store'])->name('addExpense');
+    Route::get('/expense/list',[ExpenseController::class,'show'])->name('expenseList');
+    Route::post('/update/expense',[ExpenseController::class,'update'])->name('updateExpense');
+    Route::post('/delete/expense',[ExpenseController::class,'destroy'])->name('deleteExpense');
+
+
+
+
+
     /* generate report end*/
 
     /*generate barcode */

@@ -18,6 +18,9 @@ class Product extends Model
         'status',
         'carat',
         'weight',
-        'bangla_weight'
+        'bangla_weight',
+        'gold_weight',
+        'diamond_weight',
+        'diamond_piece'
     ];
 }

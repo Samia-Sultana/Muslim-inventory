@@ -24,25 +24,65 @@
                             <div class="row">
 
                                 <div class="col-lg-6 col-sm-12 tabs_wrapper">
-
-
-                                    <div class="row">
-                                        <div class="col-lg-6 col-sm-12 col-12">
-                                            <div class="form-group">
-                                                <form id="productSearch" onClick={ productSearch }>
-                                                    <label for="">Search Product</label>
-                                                    <input class="form-control" type="search" name="productSearch" id="productSearch">
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="row ">
-                                        <div class="col-lg-3 col-sm-6 d-flex ">
+                                        @foreach($allProduct as $item)
+                                        <?php
+                                        $productDetail = App\Models\Product::find($item->product_id);
+                                        ?>
+                                        <div class="col-lg-4 col-sm-6 d-flex ">
                                             <div class="productset flex-fill active">
+                                                <div class="productsetimg">
+                                                    <img src="{{url('photos/'.$productDetail->thumbnail)}}" alt="img" style="height:150px;width:200px;">
+                                                    <h6>Qty: {{$item->available_qty}}</h6>
+                                                    <div class="check-product">
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-{{$item->product_id}}">Add</button>
+                                                        <div class="modal fade" id="create-{{$item->product_id}}" tabindex="-1" aria-labelledby="create" aria-hidden="true">
+                                                            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title">Add Product Price</h5>
+                                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">×</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form action="{{route('addToCart')}}" method="POST">
+                                                                            @csrf
+                                                                            <div class="row">
+                                                                                <div class="col-lg-12 col-sm-12 col-12">
+                                                                                    <div class="form-group" id="productPriceInputSection">
+                                                                                        <input type="text" name="barcode" id="barcode" value="{{$item->barcode}}">
+                                                                                        <input type="text" name="sellingPrice" id="sellingPrice">
 
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-lg-12">
+                                                                                <button class="btn btn-submit me-2" type="submit">Submit</button>
+                                                                                <a class="btn btn-cancel" data-bs-dismiss="modal">Cancel</a>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="productsetcontent">
+
+                                                    <h4>Name: {{$productDetail->name}}</h4>
+                                                    <h6>Token number:{{$productDetail->sku}}</h6>
+
+                                                </div>
                                             </div>
                                         </div>
+                                        @endforeach
+
                                     </div>
+
+
+
                                     <div class="row">
                                         @if(Session::get('cart'))
                                         <div class="card-body pt-0 cart-detail-row">
@@ -104,74 +144,62 @@
                                         </div>
                                         @endif
 
-                                        <div class="setvalue">
-                                            <ul>
 
-                                                <li>
-                                                    <h5>Subtotal </h5>
-                                                    <h6 id="subtotal">{{$subTotal}}</h6>
-                                                </li>
-
-
-                                            </ul>
-                                        </div>
                                     </div>
 
                                 </div>
 
 
                                 <div class="col-lg-6 col-sm-12 customer_div">
-                                    <div class="form-group">
-                                        <form id="customerSearch" onClick={ customerSearch }>
 
-                                            <label for="">Search Customer</label>
-                                            <input class="form-control" type="search" name="customerSearch" id="customerSearch">
-                                        </form>
+                                    <div class="setvalue">
+                                        <ul>
 
+                                            <li>
+                                                <h5>Subtotal </h5>
+                                                <h6 id="subtotal">{{$subTotal}}</h6>
+                                            </li>
+
+
+                                        </ul>
                                     </div>
 
-                                    <div>
-                                        <div class="customerset flex-fill active">
-
-                                        </div>
-
-                                    </div>
                                     <form method="POST" action="{{route('checkout')}}" class="d-flex" enctype="multipart/form-data">
                                         @csrf
-                                    <div class="card card-order ">
-                                    
-                                        <div class="split-card p-3">
-                                            <div class="form-group">
-                                                <label for="">Customer Name</label>
-                                                <input class="form-control" type="text" id="customer_name" name="customer_name">
+                                        <div class="card card-order ">
+
+                                            <div class="split-card p-3">
+                                                <div class="form-group">
+                                                    <label for="">Customer Name</label>
+                                                    <input class="form-control" type="text" id="customer_name" name="customer_name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Customer Mobile</label>
+                                                    <input class="form-control" type="text" name="customer_phone" id="customer_phone">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Customer Address</label>
+                                                    <input class="form-control" type="text" id="customer_address" name="customer_address">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Chalan Number</label>
+                                                    <input class="form-control" type="text" id="chalan_no" name="chalan_no">
+                                                </div>
+
                                             </div>
-                                            <div class="form-group">
-                                                <label for="">Customer Mobile</label>
-                                                <input class="form-control" type="text" name="customer_phone" id="customer_phone">
+
+
+
+                                            <div class="card-body pt-0 pb-2">
+
+                                                <div class="btn-totallabel">
+                                                    <button type="submit">Checkout</button>
+                                                </div>
+
                                             </div>
-                                            <div class="form-group">
-                                                <label for="">Customer Address</label>
-                                                <input class="form-control" type="text" id="customer_address" name="customer_address">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="">Chalan Number</label>
-                                                <input class="form-control" type="text" id="chalan_no" name="chalan_no">
-                                            </div>
+
 
                                         </div>
-
-
-
-                                        <div class="card-body pt-0 pb-2">
-
-                                            <div class="btn-totallabel">
-                                                <button type="submit">Checkout</button>
-                                            </div>
-
-                                        </div>
-                                       
-
-                                    </div>
                                     </form>
                                 </div>
                             </div>
@@ -182,35 +210,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="create" tabindex="-1" aria-labelledby="create" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add Product Price</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{route('addToCart')}}" method="POST">
-                        @csrf
-                        <div class="row">
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group" id="productPriceInputSection">
 
 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <button class="btn btn-submit me-2" type="submit">Submit</button>
-                            <a class="btn btn-cancel" data-bs-dismiss="modal">Cancel</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
 

@@ -66,9 +66,9 @@ class ProductController extends Controller
             'sku' => $input['sku'],
             'thumbnail' => $compressedImage,
             'description' => $input['description'],
-            'carat' => $request->carat,
-            'weight' => $request->weight,
-            'bangla_weight' => $request->bangla_weight
+            'diamond_piece' => $request->diamond_piece,
+            'gold_weight' => $request->gold_weight,
+            'diamond_weight' => $request->diamond_weight
            
         ]);
 
@@ -127,9 +127,9 @@ class ProductController extends Controller
             'name' => $input['update_name'],
             'sku' => $input['update_sku'],
             'thumbnail' => $thumbnailImageName,
-            'carat' => $input['update_carat'],
-            'weight' => $input['update_weight'],
-            'bangla_weight' => $input['update_bangla_weight'],
+            'gold_weight' => $input['update_gold_weight'],
+            'diamond_weight' => $input['update_diamond_weight'],
+            'diamond_piece' => $input['update_diamond_piece'],
             
         ]);
 
@@ -139,10 +139,11 @@ class ProductController extends Controller
         $product->update([
             'name' => $input['update_name'],
             'sku' => $input['update_sku'],
-            'carat' => $input['update_carat'],
-            'weight' => $input['update_weight'],
-            'bangla_weight' => $input['update_bangla_weight'],
+            'gold_weight' => $input['update_gold_weight'],
+            'diamond_weight' => $input['update_diamond_weight'],
+            'diamond_piece' => $input['update_diamond_piece'],
             
+        
         ]);
 
     }

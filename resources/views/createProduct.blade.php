@@ -8,6 +8,11 @@
                     <h6>Create new product</h6>
                 </div>
             </div>
+            @php
+            use Illuminate\Http\Request;
+            $currentUrl = request()->url();
+            @endphp
+
             <form enctype="multipart/form-data" method="POST" action="{{ route('addProduct') }}" class="d-flex">
                 @csrf
                 <div class="card">
@@ -50,7 +55,7 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label>Product Thumbnail*</label>
+                                        <label>Product Image*</label>
 
                                         <input type="file" class="form-control" aria-label="file example" id="thumbnail" name="thumbnail" required>
                                         <div class="invalid-feedback"></div>
@@ -64,35 +69,37 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label>gm/weight*</label>
+                                        <label>Gold weight(GWT)*</label>
 
-                                        <input type="text" class="form-control" aria-label="file example" id="weight" name="weight" required>
+                                        <input type="text" class="form-control" aria-label="file example" id="gold_weight" name="gold_weight" required>
+                                        <div class="invalid-feedback"></div>
+
+                                    </div>
+                                </div>
+                                @if(strpos($currentUrl, 'diamond') !== false)
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Diamond Weight(DWT)*</label>
+
+                                        <input type="text" class="form-control" aria-label="file example" id="diamond_weight" name="diamond_weight" required>
                                         <div class="invalid-feedback"></div>
 
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label>Bangla weight*</label>
+                                        <label>Diamond Piece*</label>
 
-                                        <input type="text" class="form-control" aria-label="file example" id="bangla_weight" name="bangla_weight" required>
+                                        <input type="text" class="form-control" aria-label="file example" id="diamond_piece" name="diamond_piece" required>
                                         <div class="invalid-feedback"></div>
 
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label>Carat*</label>
-
-                                        <input type="text" class="form-control" aria-label="file example" id="carat" name="carat" required>
-                                        <div class="invalid-feedback"></div>
-
-                                    </div>
-                                </div>
+                                @endif
 
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label>Description</label>
+                                        <label>Comments</label>
                                         <textarea class="form-control" id="description" name="description"></textarea>
                                     </div>
                                 </div>
@@ -138,11 +145,11 @@
         @endif
     </script>
     <script type="text/javascript">
-        $(document).ready(function(){
-            $('#thumbnail').change(function(e){
+        $(document).ready(function() {
+            $('#thumbnail').change(function(e) {
                 var reader = new FileReader();
-                reader.onload = function(e){
-                    $('#showThumbnail').attr('src',e.target.result);
+                reader.onload = function(e) {
+                    $('#showThumbnail').attr('src', e.target.result);
                 }
                 reader.readAsDataURL(e.target.files['0']);
             });
@@ -150,5 +157,3 @@
     </script>
 
 </x-admin-layout>
-
-

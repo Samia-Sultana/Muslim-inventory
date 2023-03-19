@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/plugins/fontawesome/css/fontawesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/plugins/fontawesome/css/all.min.css')}}">
-    
+
     <link rel="stylesheet" href="{{asset('assets/plugins/select2/css/select2.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/bootstrap-datetimepicker.min.css')}}">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.bootstrap4.min.css">
@@ -32,7 +32,11 @@
 </head>
 
 <body class="font-sans antialiased">
-   
+    @php
+    use Illuminate\Http\Request;
+    $currentUrl = request()->url();
+    @endphp
+
 
     <div class="main-wrapper">
 
@@ -101,11 +105,11 @@
                             <a class="dropdown-item" href="generalsettings.html"><i class="me-2" data-feather="settings"></i>Settings</a>
                             <hr class="m-0">
                             <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-danger">
-                           logout
-                            </button>
-                            
+                                @csrf
+                                <button type="submit" class="btn btn-danger">
+                                    logout
+                                </button>
+
                             </form>
                         </div>
                     </div>
@@ -139,25 +143,37 @@
                             <ul>
                                 <li><a href="{{route('addSupplierPage')}}">Add Supplier</a></li>
                                 <li><a href="{{route('supplierList')}}">Supplier List</a></li>
-                               
+
                             </ul>
                         </li>
                         <li class="submenu">
                             <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/product.svg')}}" alt="img"><span>
                                     Product</span> <span class="menu-arrow"></span></a>
                             <ul>
-                            <li><a href="{{route('addProductPage')}}">Add Product</a></li>
+                                <li><a href="{{route('addProductPage')}}">Add Product</a></li>
                                 <li><a href="{{route('productList')}}">Product List</a></li>
-                                <li><a href="{{route('barcode')}}">Print Barcode</a></li>
+                                <!-- <li><a href="{{route('barcode')}}">Print Barcode</a></li> -->
                             </ul>
                         </li>
+                        @if(strpos($currentUrl, 'diamond') !== false)
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/product.svg')}}" alt="img"><span>
+                                    Product</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="{{route('addProductPageDiamond')}}">Add Product</a></li>
+                                <li><a href="{{route('productListDiamond')}}">Product List</a></li>
+                                <!-- <li><a href="{{route('barcode')}}">Print Barcode</a></li> -->
+                            </ul>
+                        </li>
+                        @endif
+
                         <li class="submenu">
                             <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/sales1.svg')}}" alt="img"><span>
                                     Order</span> <span class="menu-arrow"></span></a>
                             <ul>
-                                <li><a href="{{route('addOrderPage')}}">Add Order </a></li>
+                                <li><a href="{{route('addOrderPage')}}">Create Sale </a></li>
                                 <li><a href="{{route('orderList')}}">Order List</a></li>
-                            <!---    <li><a href="pos.html">POS</a></li>
+                                <!---    <li><a href="pos.html">POS</a></li>
                                 <li><a href="pos.html">New Sales</a></li>
                                 <li><a href="salesreturnlists.html">Sales Return List</a></li>
                                 <li><a href="createsalesreturns.html">New Sales Return</a></li> ----->
@@ -167,15 +183,15 @@
                             <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/purchase1.svg')}}" alt="img"><span>
                                     Purchase</span> <span class="menu-arrow"></span></a>
                             <ul>
-                            <li><a href="{{route('addPurchasePage')}}">Add Purchase</a></li>
+                                <li><a href="{{route('addPurchasePage')}}">Add Purchase</a></li>
                                 <li><a href="{{route('purchaseList')}}">Purchase List</a></li>
-                                
-                            <!--    <li><a href="importpurchase.html">Import Purchase</a></li>   --->
+
+                                <!--    <li><a href="importpurchase.html">Import Purchase</a></li>   --->
                             </ul>
                         </li>
-                       
 
-                       
+
+
                         <!-- <li class="submenu">
                             <a href="javascript:void(0);"><img src="assets/img/icons/places.svg" alt="img"><span>
                                     Places</span> <span class="menu-arrow"></span></a>
@@ -186,19 +202,19 @@
                                 <li><a href="statelist.html">State list</a></li>
                             </ul>
                         </li> -->
-                        
+
                         <li class="submenu">
                             <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/time.svg')}}" alt="img"><span>
                                     Report</span> <span class="menu-arrow"></span></a>
                             <ul>
-                                
-                                
+
+
                                 <li><a href="{{route('saleReport')}}">Sales Report</a></li>
-                               
+
                                 <li><a href="{{route('purchaseReport')}}">Purchase Report</a></li>
                                 <li><a href="{{route('inventoryReport')}}">Inventory Report</a></li>
-                                
-                                
+
+
                             </ul>
                         </li>
 
@@ -206,10 +222,14 @@
                             <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/product.svg')}}" alt="img"><span>
                                     Accounts</span> <span class="menu-arrow"></span></a>
                             <ul>
+                                <li><a href="{{route('addExpensePage')}}">Expense</a></li>
+                                <li><a href="{{route('expenseList')}}">Expense List</a></li>
+
                                 <li><a href="{{route('rangeReport')}}">Report</a></li>
+
                             </ul>
                         </li>
-                       
+
                         <li class="submenu">
                             <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/product.svg')}}" alt="img"><span>
                                     Employee</span> <span class="menu-arrow"></span></a>
@@ -243,7 +263,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js02"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script>
-    
+
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('assets/js/moment.min.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap-datetimepicker.min.js')}}"></script>
