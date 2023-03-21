@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Expense;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as RequestFacade;
+
 
 class ExpenseController extends Controller
 {
@@ -41,7 +43,15 @@ class ExpenseController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->route('addExpensePage');
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addExpensePageDiamond');
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addExpensePage');
+
+        }    
     }
 
     /**
@@ -81,8 +91,16 @@ class ExpenseController extends Controller
         $expense->amount = $request->amount;
         $expense->description = $request->description;
         $expense->save();
-        return redirect()->route('expenseList');
 
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('expenseListDiamond');
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('expenseList');
+
+        }
     }
 
     /**
@@ -95,6 +113,15 @@ class ExpenseController extends Controller
     {
         $expense = Expense::find($request->expense_id);
         $expense->delete();
-        return redirect()->route('expenseList');
+        
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('expenseListDiamond');
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('expenseList');
+
+        }    
     }
 }

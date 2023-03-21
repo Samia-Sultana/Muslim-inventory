@@ -33,8 +33,11 @@
 
 <body class="font-sans antialiased">
     @php
-    use Illuminate\Http\Request;
-    $currentUrl = request()->url();
+    use Illuminate\Support\Facades\Request;
+
+    $currentUrl = Request::url();
+
+
     @endphp
 
 
@@ -134,9 +137,91 @@
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="active">
-                            <a href="{{route('dashboard')}}"><img src="{{asset('assets/img/icons/dashboard.svg')}}" alt="img"><span>
+                            <a href="{{route('shop')}}"><img src="{{asset('assets/img/icons/dashboard.svg')}}" alt="img"><span>
                                     Dashboard</span> </a>
                         </li>
+                        
+
+                        @if(strpos($currentUrl, 'diamond') !== false)
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/product.svg')}}" alt="img"><span>
+                                    Supplier</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="{{route('addSupplierPageDiamond')}}">Add Supplier</a></li>
+                                <li><a href="{{route('supplierListDiamond')}}">Supplier List</a></li>
+
+                            </ul>
+                        </li>
+
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/product.svg')}}" alt="img"><span>
+                                    Product</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="{{route('addProductPageDiamond')}}">Add Product</a></li>
+                                <li><a href="{{route('productListDiamond')}}">Product List</a></li>
+                                <!-- <li><a href="{{route('barcode')}}">Print Barcode</a></li> -->
+                            </ul>
+                        </li>
+
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/purchase1.svg')}}" alt="img"><span>
+                                    Purchase</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="{{route('addPurchasePageDiamond')}}">Add Purchase</a></li>
+                                <li><a href="{{route('purchaseListDiamond')}}">Purchase List</a></li>
+
+                                <!--    <li><a href="importpurchase.html">Import Purchase</a></li>   --->
+                            </ul>
+                        </li>
+
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/sales1.svg')}}" alt="img"><span>
+                                    Order</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="{{route('addOrderPageDiamond')}}">Create Sale </a></li>
+                                <li><a href="{{route('orderListDiamond')}}">Order List</a></li>
+                                
+                            </ul>
+                        </li>
+
+                        
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/time.svg')}}" alt="img"><span>
+                                    Report</span> <span class="menu-arrow"></span></a>
+                            <ul>
+
+
+                                <li><a href="{{route('saleReportDiamond')}}">Sales Report</a></li>
+
+                                <li><a href="{{route('purchaseReportDiamond')}}">Purchase Report</a></li>
+                                <li><a href="{{route('inventoryReportDiamond')}}">Inventory Report</a></li>
+
+
+                            </ul>
+                        </li>
+
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/product.svg')}}" alt="img"><span>
+                                    Accounts</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="{{route('addExpensePageDiamond')}}">Expense</a></li>
+                                <li><a href="{{route('expenseListDiamond')}}">Expense List</a></li>
+
+                                <li><a href="{{route('rangeReportDiamond')}}">Report</a></li>
+
+                            </ul>
+                        </li>
+
+                        
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/product.svg')}}" alt="img"><span>
+                                    Employee</span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="{{route('addEmployeePageDiamond')}}">Add Employee</a></li>
+                                <li><a href="{{route('addRolePageDiamond')}}">Add Role</a></li>
+                            </ul>
+                        </li>
+                        @elseif(strpos($currentUrl, 'diamond') == false)
                         <li class="submenu">
                             <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/product.svg')}}" alt="img"><span>
                                     Supplier</span> <span class="menu-arrow"></span></a>
@@ -155,30 +240,7 @@
                                 <!-- <li><a href="{{route('barcode')}}">Print Barcode</a></li> -->
                             </ul>
                         </li>
-                        @if(strpos($currentUrl, 'diamond') !== false)
-                        <li class="submenu">
-                            <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/product.svg')}}" alt="img"><span>
-                                    Product</span> <span class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="{{route('addProductPageDiamond')}}">Add Product</a></li>
-                                <li><a href="{{route('productListDiamond')}}">Product List</a></li>
-                                <!-- <li><a href="{{route('barcode')}}">Print Barcode</a></li> -->
-                            </ul>
-                        </li>
-                        @endif
 
-                        <li class="submenu">
-                            <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/sales1.svg')}}" alt="img"><span>
-                                    Order</span> <span class="menu-arrow"></span></a>
-                            <ul>
-                                <li><a href="{{route('addOrderPage')}}">Create Sale </a></li>
-                                <li><a href="{{route('orderList')}}">Order List</a></li>
-                                <!---    <li><a href="pos.html">POS</a></li>
-                                <li><a href="pos.html">New Sales</a></li>
-                                <li><a href="salesreturnlists.html">Sales Return List</a></li>
-                                <li><a href="createsalesreturns.html">New Sales Return</a></li> ----->
-                            </ul>
-                        </li>
                         <li class="submenu">
                             <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/purchase1.svg')}}" alt="img"><span>
                                     Purchase</span> <span class="menu-arrow"></span></a>
@@ -190,31 +252,24 @@
                             </ul>
                         </li>
 
-
-
-                        <!-- <li class="submenu">
-                            <a href="javascript:void(0);"><img src="assets/img/icons/places.svg" alt="img"><span>
-                                    Places</span> <span class="menu-arrow"></span></a>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/sales1.svg')}}" alt="img"><span>
+                                    Order</span> <span class="menu-arrow"></span></a>
                             <ul>
-                                <li><a href="newcountry.html">New Country</a></li>
-                                <li><a href="countrieslist.html">Countries list</a></li>
-                                <li><a href="newstate.html">New State </a></li>
-                                <li><a href="statelist.html">State list</a></li>
+                                <li><a href="{{route('addOrderPage')}}">Create Sale </a></li>
+                                <li><a href="{{route('orderList')}}">Order List</a></li>
+                               
                             </ul>
-                        </li> -->
+                        </li>
 
+                        
                         <li class="submenu">
                             <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/time.svg')}}" alt="img"><span>
                                     Report</span> <span class="menu-arrow"></span></a>
                             <ul>
-
-
                                 <li><a href="{{route('saleReport')}}">Sales Report</a></li>
-
                                 <li><a href="{{route('purchaseReport')}}">Purchase Report</a></li>
                                 <li><a href="{{route('inventoryReport')}}">Inventory Report</a></li>
-
-
                             </ul>
                         </li>
 
@@ -224,12 +279,12 @@
                             <ul>
                                 <li><a href="{{route('addExpensePage')}}">Expense</a></li>
                                 <li><a href="{{route('expenseList')}}">Expense List</a></li>
-
                                 <li><a href="{{route('rangeReport')}}">Report</a></li>
 
                             </ul>
                         </li>
 
+                        
                         <li class="submenu">
                             <a href="javascript:void(0);"><img src="{{asset('assets/img/icons/product.svg')}}" alt="img"><span>
                                     Employee</span> <span class="menu-arrow"></span></a>
@@ -238,6 +293,8 @@
                                 <li><a href="{{route('addRolePage')}}">Add Role</a></li>
                             </ul>
                         </li>
+                        @endif
+
                     </ul>
                 </div>
             </div>

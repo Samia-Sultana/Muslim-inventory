@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as RequestFacade;
 use Image;
 
 class ProductController extends Controller
@@ -77,7 +78,16 @@ class ProductController extends Controller
             'message' => 'New Product added!',
             'alert-type' => 'success'
         );
-        return redirect()->route('addProductPage')->with($notification);
+
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addProductPageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addProductPage')->with($notification);
+
+        }
     }
 
     /**
@@ -152,7 +162,16 @@ class ProductController extends Controller
             'message' => 'Product updated!',
             'alert-type' => 'success'
         );
-        return redirect()->route('addProductPage')->with($notification);
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addProductPageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addProductPage')->with($notification);
+
+        }
+
     }
 
     /**
@@ -171,7 +190,14 @@ class ProductController extends Controller
             'message' => 'Product Deleted!',
             'alert-type' => 'success'
         );
-        return redirect()->route('addProductPage')->with($notification);
-        
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addProductPageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addProductPage')->with($notification);
+
+        }        
     }
 }

@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Request;
+@endphp
+
 <x-admin-layout>
 
     <div class="page-wrapper">
@@ -8,9 +12,19 @@
                     <h6>Manage your Expenses</h6>
                 </div>
                 <div class="page-btn">
+                    @php
+                    $currentUrl = Request::url();
+                    @endphp
+                    @if(strpos($currentUrl, 'diamond') !== false)
+                    <a href="{{route('addExpensePageDiamond')}}" class="btn btn-added">
+                        <img src="{{asset('assets/img/icons/plus.svg')}}" alt="img">Add New Expense
+                    </a>
+                    @elseif(strpos($currentUrl, 'diamond') == false)
                     <a href="{{route('addExpensePage')}}" class="btn btn-added">
                         <img src="{{asset('assets/img/icons/plus.svg')}}" alt="img">Add New Expense
                     </a>
+                    @endif
+
                 </div>
             </div>
 
@@ -46,7 +60,7 @@
                                     <th>Date</th>
                                     <th>Amount</th>
                                     <th>Description</th>
-                                    
+
                                     <!-- <th>Payment Status</th> -->
                                     <th>Action</th>
                                 </tr>
@@ -62,16 +76,16 @@
                                         </label>
                                     </td>
 
-                                   
+
                                     <td class="text-bolds">
-                                       
+
                                         {{$expense->date}}
                                     </td>
                                     <td class="text-bolds">
-                                        {{$expense->amount}}                                    
+                                        {{$expense->amount}}
                                     </td>
                                     <td>{{$expense->description}}</td>
-                
+
 
                                     <td>
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="{{'#update_purchase_'.$expense->id}}">
@@ -87,24 +101,29 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form method="POST" action="{{route('updateExpense')}}" class="d-flex">
-                                                            @csrf
-                                                            <div class="p-1">
-                                                               
-                                                                <input type="hidden" id="expenseId" name="expenseId" value="{{$expense->id}}"></br></br>
-                                                               
-                                                                <input type="date" id="expenseDate" name="expenseDate" value="{{$expense->date}}"></br></br>
-                                                                
-                                                                <input type="text" id="amount" name="amount" value="{{$expense->amount}}"></br></br>
-                                                             
-<textarea name="description" id="description" cols="25" rows="8">{{$expense->description}}</textarea>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn btn-primary btn-update-supplier">Save changes</button>
-                                                            </div>
 
-                                                        </form>
+                                                        @if(strpos($currentUrl, 'diamond') !== false)
+                                                        <form method="POST" action="{{route('updateExpenseDiamond')}}" class="d-flex">
+                                                            @elseif(strpos($currentUrl, 'diamond') == false)
+                                                            <form method="POST" action="{{route('updateExpense')}}" class="d-flex">
+                                                                @endif
+                                                                @csrf
+                                                                <div class="p-1">
+
+                                                                    <input type="hidden" id="expenseId" name="expenseId" value="{{$expense->id}}"></br></br>
+
+                                                                    <input type="date" id="expenseDate" name="expenseDate" value="{{$expense->date}}"></br></br>
+
+                                                                    <input type="text" id="amount" name="amount" value="{{$expense->amount}}"></br></br>
+
+                                                                    <textarea name="description" id="description" cols="25" rows="8">{{$expense->description}}</textarea>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-primary btn-update-supplier">Save changes</button>
+                                                                </div>
+
+                                                            </form>
 
                                                     </div>
 
@@ -112,13 +131,17 @@
                                             </div>
                                         </div>
 
-                                        <form action="{{route('deleteExpense')}}" method="post">
-                                            @csrf
-                                            <input type="hidden" value="{{$expense->id}}" name="expense_id">
-                                            <button type="submit" class="btn btn-danger btn-delete-supplier">
-                                                <img src="{{asset('assets/img/icons/delete.svg')}}" alt="img">
-                                            </button>
-                                        </form>
+                                        @if(strpos($currentUrl, 'diamond') !== false)
+                                        <form action="{{route('deleteExpenseDiamond')}}" method="post">
+                                            @elseif(strpos($currentUrl, 'diamond') == false)
+                                            <form action="{{route('deleteExpense')}}" method="post">
+                                                @endif
+                                                @csrf
+                                                <input type="hidden" value="{{$expense->id}}" name="expense_id">
+                                                <button type="submit" class="btn btn-danger btn-delete-supplier">
+                                                    <img src="{{asset('assets/img/icons/delete.svg')}}" alt="img">
+                                                </button>
+                                            </form>
 
 
                                     </td>
@@ -136,11 +159,11 @@
     </div>
 
 
-    
 
 
-      <!-------modal cdn -------------->
-      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+    <!-------modal cdn -------------->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <!-------modal cdn end-------------->

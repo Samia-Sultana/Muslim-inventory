@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as RequestFacade;
 use Response;
 use JetBrains\PhpStorm\Pure;
 use Picqer\Barcode\BarcodeGeneratorJPG;
@@ -89,8 +90,15 @@ class PurchaseController extends Controller
             'message' => 'Purchase information added!',
             'alert-type' => 'success'
         );
-        return redirect()->route('addPurchasePage')->with($notification);
-    
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addPurchasePageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addPurchasePage')->with($notification);
+
+        }    
         
     }
 
@@ -147,8 +155,15 @@ class PurchaseController extends Controller
             'message' => 'Purchase information updated!',
             'alert-type' => 'success'
         );
-        return redirect()->route('addPurchasePage')->with($notification);
-    }
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addPurchasePageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addPurchasePage')->with($notification);
+
+        }      }
 
     /**
      * Remove the specified resource from storage.
@@ -164,8 +179,16 @@ class PurchaseController extends Controller
             'message' => 'Purchase Deleted!',
             'alert-type' => 'success'
         );
-        return redirect()->route('addPurchasePage')->with($notification);
-    }
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addPurchasePageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addPurchasePage')->with($notification);
+
+        }  
+        }
 
     public function generateBarcode(Request $request)
     {

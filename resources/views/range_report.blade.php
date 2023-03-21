@@ -1,30 +1,45 @@
+@php
+use Illuminate\Support\Facades\Request;
+@endphp
+
 <x-admin-layout>
 
     <div class="main-wrapper">
 
         <div class="page-wrapper">
             <div class="content" style="background-color: white;">
-                <form action="{{route('rangeSearchOutput')}}" method="POST">
-                    @csrf
+                @php
+                $currentUrl = Request::url();
+                @endphp
+                @if(strpos($currentUrl, 'diamond') !== false)
+                <form action="{{route('rangeSearchOutputDiamond')}}" method="POST">
+                    @elseif(strpos($currentUrl, 'diamond') == false)
+                    <form action="{{route('rangeSearchOutput')}}" method="POST">
+                        @endif
+                        @csrf
 
-                    <input type="date" name="range_start" id="range_start">
+                        <input type="date" name="range_start" id="range_start">
 
-                    <input type="date" name="range_end" id="range_end">
-                    <button type="submit">Search</button>
-                </form>
-                <div class="row d-flex flex-row justify-content-around mt-6">
-                    <div class="col-md-4" style="background-color: gray; height:80px; ">
-                        <h3 style="color:white">Sales amount: BDT-{{$total_sales}}</h3>
+                        <input type="date" name="range_end" id="range_end">
+                        <button type="submit">Search</button>
+                    </form>
+                    <div class="row d-flex flex-row justify-content-around mt-6">
+                        <div class="col-md-4" style="background-color: gray; height:80px; ">
+                            <h3 style="color:white">Sales amount: BDT-{{$total_sales}}</h3>
+                        </div>
+
+                        <div class="col-md-4" style="background-color: gray; height:80px; ">
+                            <h3 style="color:white">Total expense: BDT-{{$total_expense}}</h3>
+                        </div>
+
+
+
                     </div>
-                    
-
-
-                </div>
             </div>
 
 
 
-            <div class="content">
+            <!-- <div class="content">
                 <div class="page-header">
                     <div class="page-title">
                         <h4>Sales List</h4>
@@ -114,9 +129,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                               
+
                                     @if($orders)
-                                  
+
                                     @foreach($orders as $order)
                                     <tr>
                                         <td>
@@ -126,7 +141,7 @@
                                             </label>
                                         </td>
                                         <td>
-                                           
+
                                             {{$order->date}}
                                         </td>
                                         <td>
@@ -156,7 +171,7 @@
                     </div>
                 </div>
 
-            </div>
+            </div> -->
         </div>
     </div>
 

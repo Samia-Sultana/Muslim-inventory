@@ -9,6 +9,9 @@ use App\Models\Product;
 use App\Models\Purchase;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request as RequestFacade;
+
 
 class CartController extends Controller
 {
@@ -49,8 +52,15 @@ class CartController extends Controller
             'message' => 'product Added to list!',
             'alert-type' => 'success'
         );
-        return redirect()->route('addOrderPage')->with($notification);
-        
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addOrderPageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addOrderPage')->with($notification);
+
+        }            
     }
 
     public function updateCart(Request $request){
@@ -97,7 +107,15 @@ class CartController extends Controller
                 'message' => 'Remove product!',
                 'alert-type' => 'success'
             );
-            return redirect()->route('addOrderPage')->with($notification);
+            $currentUrl = RequestFacade::url();
+            if(strpos($currentUrl, 'diamond') !== false){
+                return redirect()->route('addOrderPageDiamond')->with($notification);
+    
+            }
+            elseif(strpos($currentUrl, 'diamond') == false){
+                return redirect()->route('addOrderPage')->with($notification);
+    
+            }          
         }
         else{
             $notification = array(
@@ -143,7 +161,7 @@ class CartController extends Controller
         $invoice['chalan_no'] = $chalanNo;
         $invoice['date'] = Carbon::now();
         $invoice['total_amount'] = $total;
-        $invoice['status'] = "pending";
+        $invoice['status'] = "complete";
         $invoice->save();
         
         
@@ -152,12 +170,16 @@ class CartController extends Controller
             foreach($cart as $item){
                 $orderDetail = new Orderdetail();
                 $orderDetail['order_id'] = $invoice['id'];
-                
                 $orderDetail['barcode_no'] = $item->barcode;
                 $orderDetail['quantity'] = $item->qty;
                 $orderDetail['singlePrice'] = $item->price;
-               
                 $orderDetail->save();
+
+                $stock = DB::table('purchases')->where('barcode', $item->barcode)->get();
+                $remainingStock = $stock[0]->available_qty - $item->qty ;
+                DB::table('purchases')->where('barcode', $item->barcode)->update([
+                    'available_qty' => $remainingStock
+                ]);
             }
         }
         
@@ -167,8 +189,15 @@ class CartController extends Controller
             'alert-type' => 'success'
         );
 
-        return redirect()->route('addOrderPage')->with($notification);
-        
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addOrderPageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addOrderPage')->with($notification);
+
+        }          
     }
     
     

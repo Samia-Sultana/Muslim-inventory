@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Request;
+@endphp
+
 <x-admin-layout>
 <div class="page-wrapper">
             <div class="content">
@@ -8,8 +12,15 @@
                     </div>
                 </div>
 
-                <form action="{{route('addRole')}}" method="POST">
-                    @csrf
+                @php
+            $currentUrl = Request::url();
+            @endphp
+            @if(strpos($currentUrl, 'diamond') !== false)
+            <form action="{{route('addRoleDiamond')}}" method="POST">
+            @elseif(strpos($currentUrl, 'diamond') == false)
+            <form action="{{route('addRole')}}" method="POST">
+            @endif                    
+            @csrf
                 <div class="card">
                     <div class="card-body">
                         <div class="row">

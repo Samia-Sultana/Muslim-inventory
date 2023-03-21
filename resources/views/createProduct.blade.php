@@ -1,3 +1,8 @@
+@php
+use Illuminate\Support\Facades\Request;
+@endphp
+
+
 <x-admin-layout>
 
     <div class="page-wrapper">
@@ -9,11 +14,13 @@
                 </div>
             </div>
             @php
-            use Illuminate\Http\Request;
-            $currentUrl = request()->url();
+            $currentUrl = Request::url();
             @endphp
-
+            @if(strpos($currentUrl, 'diamond') !== false)
+            <form enctype="multipart/form-data" method="POST" action="{{ route('addProductDiamond') }}" class="d-flex">
+            @elseif(strpos($currentUrl, 'diamond') == false)
             <form enctype="multipart/form-data" method="POST" action="{{ route('addProduct') }}" class="d-flex">
+            @endif
                 @csrf
                 <div class="card">
                     <div class="card-body">
@@ -67,6 +74,7 @@
                                     <img id="showThumbnail" src="" width="100" height="100">
 
                                 </div>
+                                @if(strpos($currentUrl, 'diamond') == false)
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Gold weight(GWT)*</label>
@@ -76,7 +84,8 @@
 
                                     </div>
                                 </div>
-                                @if(strpos($currentUrl, 'diamond') !== false)
+
+                                @elseif(strpos($currentUrl, 'diamond') !== false)
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Diamond Weight(DWT)*</label>
@@ -86,6 +95,7 @@
 
                                     </div>
                                 </div>
+
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Diamond Piece*</label>
@@ -96,7 +106,6 @@
                                     </div>
                                 </div>
                                 @endif
-
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label>Comments</label>

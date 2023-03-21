@@ -1,3 +1,8 @@
+@php
+use Illuminate\Support\Facades\Request;
+@endphp
+
+
 <x-admin-layout>
 
     <div class="main-wrapper">
@@ -9,9 +14,18 @@
                         <h4>Sales List</h4>
                         <h6>Manage your sales</h6>
                     </div>
+                    @php
+                    $currentUrl = Request::url();
+                    @endphp
                     <div class="page-btn">
-                        <a href="{{route('addOrderPage')}}" class="btn btn-added"><img src="{{asset('assets/img/icons/plus.svg')}}" alt="img" class="me-1">Add Sales</a>
-                    </div>
+                    @if(strpos($currentUrl, 'diamond') !== false)
+                    <a href="{{route('addOrderPageDiamond')}}" class="btn btn-added"><img src="{{asset('assets/img/icons/plus.svg')}}" alt="img" class="me-1">Add Sales</a>
+
+                    @elseif(strpos($currentUrl, 'diamond') == false)
+                    <a href="{{route('addOrderPage')}}" class="btn btn-added"><img src="{{asset('assets/img/icons/plus.svg')}}" alt="img" class="me-1">Add Sales</a>
+
+                    @endif                    
+                </div>
                 </div>
 
                 <div class="card">
@@ -86,7 +100,7 @@
                                         <th>Date</th>
                                         <th>Customer Name</th>
                                         <th>Order ID</th>
-                                      
+
 
                                         <th>Total</th>
 
@@ -115,18 +129,22 @@
                                             {{$customer->name}}
                                         </td>
                                         <td>{{$order->id}}</td>
-                                        
+
 
                                         <td>{{$order->total_amount}}</td>
 
 
 
                                         <td class="text-center">
-                                        <form action="{{route('deleteOrder')}}" method="post">
-                                            @csrf
-                                            <input type="hidden" value="{{$order->id}}" name="order_id">
-                                            <button type="submit" class="btn btn-danger btn-delete-supplier"><img src="{{asset('assets/img/icons/delete.svg')}}" alt="img"></button>
-                                        </form>
+                                        @if(strpos($currentUrl, 'diamond') !== false)
+                                        <form action="{{route('deleteOrderDiamond')}}" method="post">
+                                            @elseif(strpos($currentUrl, 'diamond') == false)
+                                            <form action="{{route('deleteOrder')}}" method="post">
+                                                @endif                                                 
+                                                @csrf
+                                                <input type="hidden" value="{{$order->id}}" name="order_id">
+                                                <button type="submit" class="btn btn-danger btn-delete-supplier"><img src="{{asset('assets/img/icons/delete.svg')}}" alt="img"></button>
+                                            </form>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -253,7 +271,7 @@
     </div>
 
 
-   
+
     <!-------modal cdn -------------->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

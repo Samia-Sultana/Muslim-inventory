@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Request;
+@endphp
+
 <x-admin-layout>
     <div class="page-wrapper">
         <div class="content">
@@ -6,7 +10,14 @@
                     <h4>Add Supplier</h4>
                 </div>
             </div>
+            @php
+            $currentUrl = Request::url();
+            @endphp
+            @if(strpos($currentUrl, 'diamond') !== false)
+            <form enctype="multipart/form-data" method="POST" action="{{ route('addSupplierDiamond') }}" class="d-flex">
+            @elseif(strpos($currentUrl, 'diamond') == false)
             <form enctype="multipart/form-data" method="POST" action="{{ route('addSupplier') }}" class="d-flex">
+            @endif
                 @csrf
                 <div class="card">
                     <div class="card-body">

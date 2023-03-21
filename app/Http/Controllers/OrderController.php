@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Models\Orderdetail;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as RequestFacade;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -89,7 +91,7 @@ class OrderController extends Controller
         $order['shipping'] = $request->shipping;
         $order['city'] = $request->city;
         $order['message'] = $request->message;
-        $order['status'] = 'pending';
+        $order['status'] = 'complete';
         $order['total_amount'] = $request->total;
         $order->save();
 
@@ -107,7 +109,15 @@ class OrderController extends Controller
             'message' => 'Order Added!',
             'alert-type' => 'success'
         );
-        return redirect()->route('addOrderPage')->with($notification);
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addOrderPageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addOrderPage')->with($notification);
+
+        }        
     }
 
     /**
@@ -171,7 +181,15 @@ class OrderController extends Controller
 
         
 
-        return redirect()->route('orderList')->with($notification);
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addOrderPageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addOrderPage')->with($notification);
+
+        }     
     }
 
     public function statusUpdate(Request $request){

@@ -29,7 +29,8 @@ class ReportController extends Controller
     public function range(){
         $orders = array();
         $total_sales = 0;
-        return view('range_report', compact('orders','total_sales'));
+        $total_expense = 0;
+        return view('range_report', compact('orders','total_sales', 'total_expense'));
         
     }
 
@@ -42,8 +43,14 @@ class ReportController extends Controller
         foreach($orders as $order){
             $total_sales = $total_sales + $order->total_amount;
         }
-       
-        return view('range_report', compact('orders' ,'total_sales'));
+
+        $expenses = DB::table('expenses')->whereBetween('date', [$start, $end])->get();
+        $total_expense = 0;
+        foreach($expenses as $expense){
+            $total_expense = $total_expense + $expense->amount;
+        }
+
+        return view('range_report', compact('orders' ,'total_sales', 'total_expense'));
         
     }
 }

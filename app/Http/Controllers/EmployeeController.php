@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as RequestFacade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role as ModelsRole;
@@ -27,7 +28,15 @@ class EmployeeController extends Controller
             'model_id' => $user['id']
         ]);
 
-        return redirect()->route('addEmployeePage');
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addEmployeePageDiamond');
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addEmployeePage');
+
+        }        
     }
     public function role(){
         return view('createRole');
@@ -38,6 +47,14 @@ class EmployeeController extends Controller
             'name' => $all['name'],
             'guard_name' => 'web',
         ]);
-        return redirect()->route('addRolePage');
-    }
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addRolePageDiamond');
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addRolePage');
+
+        }    
+        }
 }

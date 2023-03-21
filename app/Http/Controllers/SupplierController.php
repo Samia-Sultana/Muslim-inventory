@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as RequestFacade;
+
 
 class SupplierController extends Controller
 {
@@ -12,7 +14,10 @@ class SupplierController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
+        
     public function index()
+
     {
         return view('createSupplier');
     }
@@ -49,7 +54,16 @@ class SupplierController extends Controller
             'message' => 'New supplier added!',
             'alert-type' => 'success'
         );
-        return redirect()->route('addSupplierPage')->with($notification);
+
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addSupplierPageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addSupplierPage')->with($notification);
+
+        }
     }
 
     /**
@@ -60,6 +74,7 @@ class SupplierController extends Controller
      */
     public function show(Supplier $supplier)
     {
+        
         $suppliers = Supplier::all();
         return view('supplierList', compact('suppliers'));
     }
@@ -101,7 +116,16 @@ class SupplierController extends Controller
             'message' => 'Supplier updated!',
             'alert-type' => 'success'
         );
-        return redirect()->route('addSupplierPage')->with($notification);
+
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addSupplierPageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addSupplierPage')->with($notification);
+
+        }
     }
 
     /**
@@ -115,12 +139,20 @@ class SupplierController extends Controller
         $id = $request->supplier_id;
         Supplier::find($id)->delete();
         
-        
         $notification = array(
             'message' => 'Supplier Deleted!',
             'alert-type' => 'success'
         );
-        return redirect()->route('addSupplierPage')->with($notification);
+
+        $currentUrl = RequestFacade::url();
+        if(strpos($currentUrl, 'diamond') !== false){
+            return redirect()->route('addSupplierPageDiamond')->with($notification);
+
+        }
+        elseif(strpos($currentUrl, 'diamond') == false){
+            return redirect()->route('addSupplierPage')->with($notification);
+
+        }
         
     }
 }

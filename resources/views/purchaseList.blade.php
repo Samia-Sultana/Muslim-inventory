@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Request;
+@endphp
+
 <x-admin-layout>
 
     <div class="page-wrapper">
@@ -7,10 +11,21 @@
                     <h4>PURCHASE LIST</h4>
                     <h6>Manage your purchases</h6>
                 </div>
+                @php
+                $currentUrl = Request::url();
+                @endphp
+
                 <div class="page-btn">
+                    @if(strpos($currentUrl, 'diamond') !== false)
+                    <a href="{{route('addPurchasePageDiamond')}}" class="btn btn-added">
+                        <img src="{{asset('assets/img/icons/plus.svg')}}" alt="img">Add New Purchases
+                    </a>
+                    @elseif(strpos($currentUrl, 'diamond') == false)
                     <a href="{{route('addPurchasePage')}}" class="btn btn-added">
                         <img src="{{asset('assets/img/icons/plus.svg')}}" alt="img">Add New Purchases
                     </a>
+                    @endif
+
                 </div>
             </div>
 
@@ -47,12 +62,12 @@
                                     <th>Token Number</th>
                                     <th>Supplier Name</th>
                                     <th>Purchase Date</th>
-                                   
+
                                     <th>Buying Price</th>
-                           
+
                                     <th>Total qty</th>
                                     <th>Batch No</th>
-     
+
 
                                     <th>Barcode</th>
                                     <!-- <th>Payment Status</th> -->
@@ -71,44 +86,42 @@
                                     </td>
 
                                     <td class="text-bolds">
-                                    <?php
+                                        <?php
                                         try {
                                             $product = App\Models\Product::findOrFail($purchase->product_id);
-                                            
                                         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
                                             $product = new stdClass();
                                             $product->name = null;
                                             $product->sku = null;
                                         }
 
-                                        
+
                                         ?>
                                         {{$product->name}}
                                     </td>
                                     <td class="text-bolds">
-                                       
+
                                         {{$product->sku}}
                                     </td>
                                     <td class="text-bolds">
                                         <?php
-                                         try {
+                                        try {
                                             $supplier = App\Models\Supplier::findOrFail($purchase->supplier_id);
-                                            
                                         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
                                             $supplier = new stdClass();
                                             $supplier->name = null;
                                         }
-                                        
+
                                         ?>
                                         {{$supplier->name}}
                                     </td>
                                     <td>{{$purchase->purchase_date}}</td>
-                
+
                                     <td>{{$purchase->buying_price}}</td>
-                         
+
                                     <td>{{$purchase->total_qty}}</td>
                                     <td>{{$purchase->batch_no}}</td>
-                                 
+
 
                                     <td>{{$purchase->barcode}}</td>
 
@@ -126,66 +139,67 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form method="POST" action="{{route('updatePurchase')}}" class="d-flex">
-                                                            @csrf
-                                                            <div class="p-1">
-                                                                <select name="product" id="product">
-                                                                    <?php
-                                                                     try {
-                                                                        $productDetail = App\Models\Product::findOrFail($purchase->product_id);
-                                                                        
-                                                                    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-                                                                        $productDetail = new stdClass();
-                                                                        $productDetail->name = null;
-                                                                        $productDetail->sku = null;
-                                                                    }
-                            
-                                                                    
-                                                                    ?>
-                                                                    <option value="{{$purchase->product_id}}">{{$productDetail->name}}{{$productDetail->sku}}</option>
-                                                                    @if($products)
-                                                                    @foreach($products as $product)
-                                                                    <option value="{{$product->id}}">{{$product->name}}{{$product->sku}}</option>
-                                                                    @endforeach
-                                                                    @endif
+                                                        @if(strpos($currentUrl, 'diamond') !== false)
+                                                        <form method="POST" action="{{route('updatePurchaseDiamond')}}" class="d-flex">
+                                                            @elseif(strpos($currentUrl, 'diamond') == false)
+                                                            <form method="POST" action="{{route('updatePurchase')}}" class="d-flex">
+                                                                @endif 
+                                                                @csrf
+                                                                <div class="p-1">
+                                                                    <select name="product" id="product">
+                                                                        <?php
+                                                                        try {
+                                                                            $productDetail = App\Models\Product::findOrFail($purchase->product_id);
+                                                                        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+                                                                            $productDetail = new stdClass();
+                                                                            $productDetail->name = null;
+                                                                            $productDetail->sku = null;
+                                                                        }
 
-                                                                </select>
-                                                                <select name="supplier" id="supplier">
-                                                                    <?php
-                                                                    try {
-                                                                        $supplierDetail = App\Models\Supplier::findOrFail($purchase->supplier_id);
-                                                                        
-                                                                    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-                                                                        $supplierDetail = new stdClass();
-                                                                        $supplierDetail->name = null;
-                                                                   
-                                                                    }
-                                                                    
-                                                                    ?>
-                                                                    <option value="{{$purchase->supplier_id}}">{{$supplierDetail->name}}</option>
-                                                                    @if($suppliers)
-                                                                    @foreach($suppliers as $supplier)
-                                                                    <option value="{{$supplier->id}}">{{$supplier->name}}</option>
-                                                                    @endforeach
-                                                                    @endif
 
-                                                                </select>
-                                                                <input type="hidden" id="purchaseId" name="purchaseId" value="{{$purchase->id}}"></br></br>
-                                                                <input type="text" id="buyingPrice" name="buyingPrice" value="{{$purchase->buying_price}}"></br></br>
-                                                               
-                                                                <input type="date" id="purchaseDate" name="purchaseDate" value="{{$purchase->purchase_date}}"></br></br>
-                                                                
-                                                                <input type="text" id="batchNo" name="batchNo" value="{{$purchase->batch_no}}"></br></br>
-                                                             
-                                                                <input type="text" id="totalQty" name="totalQty" value="{{$purchase->total_qty}}"></br></br>
+                                                                        ?>
+                                                                        <option value="{{$purchase->product_id}}">{{$productDetail->name}}{{$productDetail->sku}}</option>
+                                                                        @if($products)
+                                                                        @foreach($products as $product)
+                                                                        <option value="{{$product->id}}">{{$product->name}}{{$product->sku}}</option>
+                                                                        @endforeach
+                                                                        @endif
 
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn btn-primary btn-update-supplier">Save changes</button>
-                                                            </div>
+                                                                    </select>
+                                                                    <select name="supplier" id="supplier">
+                                                                        <?php
+                                                                        try {
+                                                                            $supplierDetail = App\Models\Supplier::findOrFail($purchase->supplier_id);
+                                                                        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+                                                                            $supplierDetail = new stdClass();
+                                                                            $supplierDetail->name = null;
+                                                                        }
 
-                                                        </form>
+                                                                        ?>
+                                                                        <option value="{{$purchase->supplier_id}}">{{$supplierDetail->name}}</option>
+                                                                        @if($suppliers)
+                                                                        @foreach($suppliers as $supplier)
+                                                                        <option value="{{$supplier->id}}">{{$supplier->name}}</option>
+                                                                        @endforeach
+                                                                        @endif
+
+                                                                    </select>
+                                                                    <input type="hidden" id="purchaseId" name="purchaseId" value="{{$purchase->id}}"></br></br>
+                                                                    <input type="text" id="buyingPrice" name="buyingPrice" value="{{$purchase->buying_price}}"></br></br>
+
+                                                                    <input type="date" id="purchaseDate" name="purchaseDate" value="{{$purchase->purchase_date}}"></br></br>
+
+                                                                    <input type="text" id="batchNo" name="batchNo" value="{{$purchase->batch_no}}"></br></br>
+
+                                                                    <input type="text" id="totalQty" name="totalQty" value="{{$purchase->total_qty}}"></br></br>
+
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-primary btn-update-supplier">Save changes</button>
+                                                                </div>
+
+                                                            </form>
 
                                                     </div>
 
@@ -193,13 +207,17 @@
                                             </div>
                                         </div>
 
-                                        <form action="{{route('deletePurchase')}}" method="post">
-                                            @csrf
-                                            <input type="hidden" value="{{$purchase->id}}" name="purchase_id">
-                                            <button type="submit" class="btn btn-danger btn-delete-supplier">
-                                                <img src="{{asset('assets/img/icons/delete.svg')}}" alt="img">
-                                            </button>
-                                        </form>
+                                        @if(strpos($currentUrl, 'diamond') !== false)
+                                        <form action="{{route('deletePurchaseDiamond')}}" method="post">
+                                            @elseif(strpos($currentUrl, 'diamond') == false)
+                                            <form action="{{route('deletePurchase')}}" method="post">
+                                                @endif 
+                                                @csrf
+                                                <input type="hidden" value="{{$purchase->id}}" name="purchase_id">
+                                                <button type="submit" class="btn btn-danger btn-delete-supplier">
+                                                    <img src="{{asset('assets/img/icons/delete.svg')}}" alt="img">
+                                                </button>
+                                            </form>
 
 
                                     </td>
@@ -217,11 +235,11 @@
     </div>
 
 
-    
 
 
-      <!-------modal cdn -------------->
-      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+    <!-------modal cdn -------------->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <!-------modal cdn end-------------->

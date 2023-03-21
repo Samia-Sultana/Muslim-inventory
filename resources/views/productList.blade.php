@@ -1,3 +1,8 @@
+
+@php
+use Illuminate\Support\Facades\Request;
+@endphp
+
 <x-admin-layout>
     <div class="page-wrapper">
         <div class="content">
@@ -6,8 +11,17 @@
                     <h4>Product List</h4>
                     <h6>Manage your products</h6>
                 </div>
+                @php
+            $currentUrl = Request::url();
+            @endphp
                 <div class="page-btn">
-                    <a href="{{route('addProductPage')}}" class="btn btn-added"><img src="{{asset('assets/img/icons/plus.svg')}}" alt="img" class="me-1">Add New Product</a>
+                @if(strpos($currentUrl, 'diamond') !== false)
+                <a href="{{route('addProductPageDiamond')}}" class="btn btn-added"><img src="{{asset('assets/img/icons/plus.svg')}}" alt="img" class="me-1">Add New Product</a>
+
+                @elseif(strpos($currentUrl, 'diamond') == false)
+                <a href="{{route('addProductPage')}}" class="btn btn-added"><img src="{{asset('assets/img/icons/plus.svg')}}" alt="img" class="me-1">Add New Product</a>
+
+                @endif
                 </div>
             </div>
 
@@ -66,7 +80,7 @@
                                     <td>
                                         {{$product->diamond_piece}}
                                     </td>
-                                   
+
                                     <td>
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="{{'#update_product_'.$product->id}}">
                                             <img src="{{asset('assets/img/icons/edit.svg')}}" alt="img">
@@ -81,34 +95,45 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form method="POST" action="{{route('updateProduct')}}" enctype="multipart/form-data" class="d-flex">
-                                                            @csrf
-                                                            <div class="p-1">
-                                                                <input type="hidden" id="update_productId" name="update_productId" value="{{$product->id}}">
-                                                                <input type="text" id="update_name" name="update_name" value="{{$product->name}}"><br><br>
-                                                                <input type="text" id="update_sku" name="update_sku" value="{{$product->sku}}"><br><br>
-                                                                <input type="file" id="update_thumbnail" name="update_thumbnail"><br><br>
-                                                                <input type="text" id="update_gold_weight" name="update_gold_weight" value="{{$product->gold_weight}}"><br><br>
-                                                                <input type="text" id="update_diamond_weight" name="update_diamond_weight" value="{{$product->diamond_weight}}"><br><br>
-                                                                <input type="text" id="update_diamond_piece" name="update_diamond_piece" value="{{$product->diamond_piece}}"><br><br>
-                                                                
-                                                                
 
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn btn-primary btn-update-product">Save changes</button>
-                                                            </div>
+                                                        @if(strpos($currentUrl, 'diamond') !== false)
+                                                        <form method="POST" action="{{route('updateProductDiamond')}}" enctype="multipart/form-data" class="d-flex">
 
-                                                        </form>
+                                                            @elseif(strpos($currentUrl, 'diamond') == false)
+                                                            <form method="POST" action="{{route('updateProduct')}}" enctype="multipart/form-data" class="d-flex">
+                                                                @endif
+
+                                                                @csrf
+                                                                <div class="p-1">
+                                                                    <input type="hidden" id="update_productId" name="update_productId" value="{{$product->id}}">
+                                                                    <input type="text" id="update_name" name="update_name" value="{{$product->name}}"><br><br>
+                                                                    <input type="text" id="update_sku" name="update_sku" value="{{$product->sku}}"><br><br>
+                                                                    <input type="file" id="update_thumbnail" name="update_thumbnail"><br><br>
+                                                                    <input type="text" id="update_gold_weight" name="update_gold_weight" value="{{$product->gold_weight}}"><br><br>
+                                                                    <input type="text" id="update_diamond_weight" name="update_diamond_weight" value="{{$product->diamond_weight}}"><br><br>
+                                                                    <input type="text" id="update_diamond_piece" name="update_diamond_piece" value="{{$product->diamond_piece}}"><br><br>
+
+
+
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-primary btn-update-product">Save changes</button>
+                                                                </div>
+
+                                                            </form>
 
                                                     </div>
 
                                                 </div>
                                             </div>
                                         </div>
+                                        @if(strpos($currentUrl, 'diamond') !== false)
+                                        <form action="{{route('deleteProductDiamond')}}" method="post">
+                                        @elseif(strpos($currentUrl, 'diamond') == false)
                                         <form action="{{route('deleteProduct')}}" method="post">
-                                            @csrf
+                                        @endif                                            
+                                        @csrf
                                             <input type="hidden" value="{{$product->id}}" name="product_id">
                                             <button type="submit" class="btn btn-danger btn-delete-product">
                                                 <img src="{{asset('assets/img/icons/delete.svg')}}" alt="img">
@@ -130,7 +155,7 @@
         </div>
     </div>
 
-    
+
     <!-------modal cdn -------------->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

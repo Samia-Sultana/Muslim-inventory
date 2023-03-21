@@ -1,3 +1,8 @@
+@php
+use Illuminate\Support\Facades\Request;
+@endphp
+
+
 <x-admin-layout>
     <div class="main-wrapper">
         <div class="page-wrapper pagehead">
@@ -13,10 +18,9 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
+                @php
+                $currentUrl = Request::url();
+                @endphp
 
                 <div class="row">
                     <div class="col-sm-12">
@@ -35,38 +39,10 @@
                                                     <img src="{{url('photos/'.$productDetail->thumbnail)}}" alt="img" style="height:150px;width:200px;">
                                                     <h6>Qty: {{$item->available_qty}}</h6>
                                                     <div class="check-product">
-                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-{{$item->product_id}}">Add</button>
-                                                        <div class="modal fade" id="create-{{$item->product_id}}" tabindex="-1" aria-labelledby="create" aria-hidden="true">
-                                                            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title">Add Product Price</h5>
-                                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">×</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <form action="{{route('addToCart')}}" method="POST">
-                                                                            @csrf
-                                                                            <div class="row">
-                                                                                <div class="col-lg-12 col-sm-12 col-12">
-                                                                                    <div class="form-group" id="productPriceInputSection">
-                                                                                        <input type="text" name="barcode" id="barcode" value="{{$item->barcode}}">
-                                                                                        <input type="text" name="sellingPrice" id="sellingPrice">
-
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-lg-12">
-                                                                                <button class="btn btn-submit me-2" type="submit">Submit</button>
-                                                                                <a class="btn btn-cancel" data-bs-dismiss="modal">Cancel</a>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
+                                                        <!-- Button to open the modal -->
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#example-{{$item->barcode}}">
+                                                            Add
+                                                        </button>
                                                     </div>
                                                 </div>
                                                 <div class="productsetcontent">
@@ -77,15 +53,50 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="example-{{$item->barcode}}" tabindex="-1" aria-labelledby="example-{{$item->barcode}}-label" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <!-- Modal header -->
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="example-{{$item->barcode}}-label">Add product Price </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">close</button>
+                                                    </div>
+                                                    <!-- Modal body -->
+                                                    @if(strpos($currentUrl, 'diamond') !== false)
+                                                    <form action="{{route('addToCartDiamond')}}" method="POST">
+                                                        @elseif(strpos($currentUrl, 'diamond') == false)
+                                                        <form action="{{route('addToCart')}}" method="POST">
+                                                            @endif
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <input type="hidden" name="product_barcode" id="product_barcode" value="{{$item->barcode}}">
+                                                                <input type="text" name="price" id="price" value="{{$item->selling_price}}">
+                                                            </div>
+                                                            <!-- Modal footer -->
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                                            </div>
+                                                        </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                         @endforeach
 
                                     </div>
 
 
 
-                                    <div class="row">
+
+
+                                </div>
+
+
+                                <div class="col-lg-6 col-sm-12 customer_div">
+                                    <div class="row cart-detail-row">
                                         @if(Session::get('cart'))
-                                        <div class="card-body pt-0 cart-detail-row">
+                                        <div class="card-body pt-0 ">
                                             <div class="totalitem">
                                                 <h4>Total items : {{count(Session::get('cart'))}} </h4>
                                                 <a href="javascript:void(0);">Clear all</a>
@@ -129,11 +140,15 @@
                                                     </li>
                                                     <li>{{$product->price}} </li>
                                                     <li>
-                                                        <form action="{{route('removeCartProduct')}}" method="POST" enctype="multipart/form-data">
-                                                            @csrf
-                                                            <input type="hidden" name="barcode" value="{{$product->barcode}}">
-                                                            <button type="submit" class="remove"><img src="{{asset('assets/img/icons/delete-2.svg')}}" alt="img"></button>
-                                                        </form>
+                                                        @if(strpos($currentUrl, 'diamond') !== false)
+                                                        <form action="{{route('removeCartProductDiamond')}}" method="POST" enctype="multipart/form-data">
+                                                            @elseif(strpos($currentUrl, 'diamond') == false)
+                                                            <form action="{{route('removeCartProduct')}}" method="POST" enctype="multipart/form-data">
+                                                                @endif
+                                                                @csrf
+                                                                <input type="hidden" name="barcode" value="{{$product->barcode}}">
+                                                                <button type="submit" class="remove"><img src="{{asset('assets/img/icons/delete-2.svg')}}" alt="img"></button>
+                                                            </form>
                                                     </li>
                                                 </ul>
 
@@ -147,11 +162,6 @@
 
                                     </div>
 
-                                </div>
-
-
-                                <div class="col-lg-6 col-sm-12 customer_div">
-
                                     <div class="setvalue">
                                         <ul>
 
@@ -164,43 +174,47 @@
                                         </ul>
                                     </div>
 
-                                    <form method="POST" action="{{route('checkout')}}" class="d-flex" enctype="multipart/form-data">
-                                        @csrf
-                                        <div class="card card-order ">
+                                    @if(strpos($currentUrl, 'diamond') !== false)
+                                    <form method="POST" action="{{route('checkoutDiamond')}}" class="d-flex" enctype="multipart/form-data">
+                                        @elseif(strpos($currentUrl, 'diamond') == false)
+                                        <form method="POST" action="{{route('checkout')}}" class="d-flex" enctype="multipart/form-data">
+                                            @endif
+                                            @csrf
+                                            <div class="card card-order ">
 
-                                            <div class="split-card p-3">
-                                                <div class="form-group">
-                                                    <label for="">Customer Name</label>
-                                                    <input class="form-control" type="text" id="customer_name" name="customer_name">
+                                                <div class="split-card p-3">
+                                                    <div class="form-group">
+                                                        <label for="">Customer Name</label>
+                                                        <input class="form-control" type="text" id="customer_name" name="customer_name">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="">Customer Mobile</label>
+                                                        <input class="form-control" type="text" name="customer_phone" id="customer_phone">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="">Customer Address</label>
+                                                        <input class="form-control" type="text" id="customer_address" name="customer_address">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="">Memo Number</label>
+                                                        <input class="form-control" type="text" id="chalan_no" name="chalan_no">
+                                                    </div>
+
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="">Customer Mobile</label>
-                                                    <input class="form-control" type="text" name="customer_phone" id="customer_phone">
+
+
+
+                                                <div class="card-body pt-0 pb-2">
+
+                                                    <div class="btn-totallabel">
+                                                        <button type="submit">Checkout</button>
+                                                    </div>
+
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="">Customer Address</label>
-                                                    <input class="form-control" type="text" id="customer_address" name="customer_address">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="">Chalan Number</label>
-                                                    <input class="form-control" type="text" id="chalan_no" name="chalan_no">
-                                                </div>
+
 
                                             </div>
-
-
-
-                                            <div class="card-body pt-0 pb-2">
-
-                                                <div class="btn-totallabel">
-                                                    <button type="submit">Checkout</button>
-                                                </div>
-
-                                            </div>
-
-
-                                        </div>
-                                    </form>
+                                        </form>
                                 </div>
                             </div>
                         </div>
@@ -208,6 +222,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -217,121 +232,13 @@
 
 
 
-    <!-------modal cdn -------------->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <!-------modal cdn end-------------->
-    <!-------toaster cdn -------------->
-    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"> </script>
-    <script>
-        @if(Session::has('message'))
-        var type = "{{ Session::get('alert-type','info') }}"
-        switch (type) {
-            case 'info':
-                toastr.info(" {{ Session::get('message') }} ");
-                break;
-            case 'success':
-                toastr.success(" {{ Session::get('message') }} ");
-                break;
-            case 'warning':
-                toastr.warning(" {{ Session::get('message') }} ");
-                break;
-            case 'error':
-                toastr.error(" {{ Session::get('message') }} ");
-                break;
-        }
-        @endif
-    </script>
-    <!-------end toaster cdn -------------->
-    <script>
-        $("#productSearch").submit(function(event) {
-            event.preventDefault();
-            var $formSubmitEvent = $(this);
-            var productTokenNumber = $formSubmitEvent.find("input#productSearch").val();
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+    <!-- Bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.min.js"></script>
 
-
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('searchProduct') }}",
-                data: {
-                    productTokenNumber: productTokenNumber
-                },
-                success: function(data) {
-                    var productInfo = data.product;
-                    $('.productset').empty();
-                    var productDiv = $('<div class="productsetimg"></div>');
-                    productDiv.append('<img src="photos/' + productInfo.thumbnail + '">');
-                    productDiv.append('<h6>' + 'QTY:' + productInfo.available_qty + '</h6>');
-
-
-                    var priceAndButtonDiv = $('<div class="productsetcontent"></div>');
-                    priceAndButtonDiv.append('<h4>' + productInfo.name + '</h4>');
-                    priceAndButtonDiv.append('<a herf="javascript:void(0);" class="btn btn-adds" data-bs-toggle="modal" data-bs-target="#create"><i class="fa fa-plus me-2"></i> Add to Cart </a>');
-                    productDiv.append(priceAndButtonDiv);
-
-                    $('.productset').append(productDiv);
-
-                    $('#productPriceInputSection').empty();
-                    $('#productPriceInputSection').append('<input type="hidden" name="product_barcode" id="product_barcode" value="' + productInfo.barcode + '">');
-                    $('#productPriceInputSection').append('<label>Enter Product Price</label>');
-                    $('#productPriceInputSection').append('<input type="text" name="price" id="price">');
-
-
-
-
-                }
-            });
-
-            // Your code to handle the form submission here
-        });
-
-
-        $("#customerSearch").submit(function(event) {
-            event.preventDefault();
-            var $formSubmitEvent = $(this);
-            var customerNumber = $formSubmitEvent.find("input#customerSearch").val();
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('searchCustomer') }}",
-                data: {
-                    customerNumber: customerNumber
-                },
-                success: function(data) {
-                    var customerInfo = data.customer;
-                    $('.customerset').empty();
-                    if (customerInfo.length > 0) {
-                        $formSubmitEvent.parents('.customer_div').find('input#customer_name').val(customerInfo[0].name);
-                        $formSubmitEvent.parents('.customer_div').find('input#customer_address').val(customerInfo[0].address);
-                        $formSubmitEvent.parents('.customer_div').find('input#customer_phone').val(customerInfo[0].phone);
-                    } else {
-                        $formSubmitEvent.parents('.customer_div').find('input#customer_name').val(null);
-                        $formSubmitEvent.parents('.customer_div').find('input#customer_address').val(null);
-                        $formSubmitEvent.parents('.customer_div').find('input#customer_phone').val(null);
-                        $('.customerset').append('<h2 style="color:red;">Not a Customer yet</h2>');
-                    }
-
-                }
-            });
-
-            // Your code to handle the form submission here
-        });
-    </script>
 
 
     <script type="text/Javascript">
@@ -357,6 +264,9 @@ if (oldQuantity > 1) {
 }
 }
 
+var currentUrl = <?php echo json_encode($currentUrl); ?>;
+console.log(currentUrl);
+var url = currentUrl.includes("diamond") ? "{{ route('updateShoppingCartDiamond') }}" : "{{ route('updateShoppingCart') }}" ;
 
 $.ajaxSetup({
     headers: {
@@ -366,7 +276,7 @@ $.ajaxSetup({
 
 $.ajax({
     type:'POST',
-    url:"{{ route('updateShoppingCart') }}",
+    url: url,
     data:{barcode:productBarcode, newQuantity:newQuantity},
     success:function(data){
         var productPrice = $button.parents(".pro-quantity").prev().text();

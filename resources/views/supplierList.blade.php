@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Request;
+@endphp
+
 <x-admin-layout>
 
     <div class="page-wrapper">
@@ -7,8 +11,17 @@
                     <h4>Supplier List</h4>
                     <h6>Manage your Supplier</h6>
                 </div>
+                @php
+            $currentUrl = Request::url();
+            @endphp
                 <div class="page-btn">
-                    <a href="{{route('addSupplierPage')}}" class="btn btn-added"><img src="{{asset('assets/img/icons/plus.svg')}}" alt="img">Add Supplier</a>
+                @if(strpos($currentUrl, 'diamond') !== false)
+                <a href="{{route('addSupplierPageDiamond')}}" class="btn btn-added"><img src="{{asset('assets/img/icons/plus.svg')}}" alt="img">Add Supplier</a>
+
+                @elseif(strpos($currentUrl, 'diamond') == false)
+                <a href="{{route('addSupplierPage')}}" class="btn btn-added"><img src="{{asset('assets/img/icons/plus.svg')}}" alt="img">Add Supplier</a>
+
+                @endif
                 </div>
             </div>
 
@@ -109,8 +122,12 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form method="POST" action="{{route('updateSupplier')}}" class="d-flex">
-                                                            @csrf
+                                                    @if(strpos($currentUrl, 'diamond') !== false)
+                                                    <form method="POST" action="{{route('updateSupplierDiamond')}}" class="d-flex">
+                                                    @elseif(strpos($currentUrl, 'diamond') == false)
+                                                    <form method="POST" action="{{route('updateSupplier')}}" class="d-flex">
+                                                    @endif
+                                                    @csrf
                                                             <div class="p-1">
                                                                 <input type="hidden" id="update_supplierId" name="update_supplierId" value="{{$supplier->id}}">
                                                                 <input type="text" id="update_name" name="update_name" value="{{$supplier->name}}"><br><br>
@@ -133,8 +150,14 @@
                                         </div>
 
                                         <!-- Modal -->
+                                        @if(strpos($currentUrl, 'diamond') !== false)
+                                        <form action="{{route('deleteSupplierDiamond')}}" method="post">
+
+                                        @elseif(strpos($currentUrl, 'diamond') == false)
                                         <form action="{{route('deleteSupplier')}}" method="post">
-                                            @csrf
+
+                                        @endif                                            
+                                        @csrf
                                             <input type="hidden" value="{{$supplier->id}}" name="supplier_id">
                                             <button type="submit" class="btn btn-danger btn-delete-supplier"><img src="{{asset('assets/img/icons/delete.svg')}}" alt="img"></button>
                                         </form>
